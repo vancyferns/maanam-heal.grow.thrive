@@ -82,7 +82,7 @@ export default function LoginPage() {
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Heart className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">MindCare</h1>
+            <h1 className="text-2xl font-bold">Maanam <span className="text-base font-normal">Heal. Grow. Thrive.</span></h1>
           </div>
           <h2 className="text-3xl font-bold text-balance">Welcome back</h2>
           <p className="text-muted-foreground mt-2">Sign in to continue your mental health journey</p>

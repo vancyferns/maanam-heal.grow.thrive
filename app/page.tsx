@@ -13,7 +13,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Heart className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold text-foreground">MindCare</h1>
+              <h1 className="text-2xl font-bold text-foreground">Maanam <span className="text-base font-normal">Heal. Grow. Thrive.</span></h1>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="ghost" asChild>
@@ -161,7 +161,7 @@ export default function HomePage() {
         <div className="container mx-auto text-center max-w-3xl">
           <h3 className="text-3xl font-bold mb-6">Ready to prioritize your mental health?</h3>
           <p className="text-muted-foreground text-lg mb-8">
-            Join thousands who trust MindCare for confidential, AI-powered mental health support.
+            Join thousands who trust Maanam for confidential, AI-powered mental health support. <span className="text-base font-normal">Heal. Grow. Thrive.</span>
           </p>
           <Button size="lg" asChild>
             <Link href="/register">Start Your Free Assessment</Link>
@@ -176,7 +176,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Heart className="h-6 w-6 text-primary" />
-                <span className="font-bold">MindCare</span>
+                <span className="font-bold">Maanam <span className="text-base font-normal">Heal. Grow. Thrive.</span></span>
               </div>
               <p className="text-sm text-muted-foreground">Privacy-first mental health support powered by AI</p>
             </div>
@@ -242,7 +242,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 MindCare. All rights reserved. This is not a substitute for professional medical advice.</p>
+            <p>&copy; 2024 Maanam. Heal. Grow. Thrive. All rights reserved. This is not a substitute for professional medical advice.</p>
           </div>
         </div>
       </footer>

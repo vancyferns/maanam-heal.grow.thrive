@@ -72,7 +72,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-border bg-card px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
             <Heart className="h-8 w-8 text-primary" />
-            <span className="ml-2 text-xl font-bold">MindCare</span>
+            <span className="ml-2 text-lg font-bold">Maanam <span className="text-sm font-normal">Heal. Grow. Thrive.</span></span>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -138,7 +138,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <SheetContent side="left" className="w-72">
           <div className="flex h-16 shrink-0 items-center">
             <Heart className="h-8 w-8 text-primary" />
-            <span className="ml-2 text-xl font-bold">MindCare</span>
+            <span className="ml-2 text-xl font-bold">Maanam <span className="text-base font-normal">Heal. Grow. Thrive.</span></span>
           </div>
           <nav className="flex flex-1 flex-col mt-8">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">

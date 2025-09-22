@@ -151,7 +151,7 @@ export default function ChatPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-lg">
               <Bot className="h-5 w-5 text-primary" />
-              MindCare AI Assistant
+              Maanam AI Assistant <span className="text-base font-normal">Heal. Grow. Thrive.</span>
             </CardTitle>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Info className="h-4 w-4" />

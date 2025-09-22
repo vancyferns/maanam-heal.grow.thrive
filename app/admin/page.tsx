@@ -80,7 +80,7 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-2">
               <Heart className="h-8 w-8 text-primary" />
               <div>
-                <h1 className="text-2xl font-bold text-foreground">MindCare Admin</h1>
+                <h1 className="text-2xl font-bold text-foreground">Maanam Admin <span className="text-base font-normal">Heal. Grow. Thrive.</span></h1>
                 <p className="text-sm text-muted-foreground">Institutional Analytics Dashboard</p>
               </div>
             </div>

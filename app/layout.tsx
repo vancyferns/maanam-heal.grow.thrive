@@ -7,7 +7,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "MindCare - Mental Health Support System",
+  title: "Maanam - Heal. Grow. Thrive. - Mental Health Support System",
   description: "AI-powered mental health support with privacy-first design",
   generator: "v0.app",
 }
