@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState , useRef } from "react"
 import { useAuth } from "@/lib/auth"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,6 +19,9 @@ export default function PHQ9AssessmentPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [responses, setResponses] = useState<number[]>(new Array(PHQ9_QUESTIONS.length).fill(-1))
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [assessmentResult, setAssessmentResult] = useState<any | null>(null)
+  const resultsRef = useRef<HTMLDivElement>(null)
+
 
   const handleResponseChange = (value: string) => {
     const newResponses = [...responses]
@@ -61,7 +64,11 @@ export default function PHQ9AssessmentPage() {
 
       const data = await response.json()
       if (data.success) {
-        router.push(`/dashboard/assessments/phq9/results?id=${data.data.id}`)
+        // router.push(`/dashboard/assessments/phq9/results?id=${data.data.id}`)
+        setAssessmentResult(data.data)
+
+        // Scroll to results
+        resultsRef.current?.scrollIntoView({ behavior: "smooth" })
       } else {
         throw new Error("Failed to submit assessment")
       }
@@ -169,19 +176,40 @@ export default function PHQ9AssessmentPage() {
           </CardContent>
         </Card>
 
+        {assessmentResult && (
+          <Card ref={resultsRef} className="border-border bg-card" id="phq9-results">
+            <CardHeader>
+              <CardTitle>Assessment Completed</CardTitle>
+              <CardDescription>
+                Your PHQ-9 score: {assessmentResult.score}/27 ({assessmentResult.severity})
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {assessmentResult.recommendations.map((rec: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <ArrowRight className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-sm">{rec}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+
         {/* Question Navigation */}
         <div className="flex items-center justify-center gap-2">
           {PHQ9_QUESTIONS.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentQuestion(index)}
-              className={`w-8 h-8 rounded-full text-xs font-medium transition-colors ${
-                index === currentQuestion
+              className={`w-8 h-8 rounded-full text-xs font-medium transition-colors ${index === currentQuestion
                   ? "bg-primary text-primary-foreground"
                   : responses[index] !== -1
                     ? "bg-primary/20 text-primary"
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
-              }`}
+                }`}
             >
               {index + 1}
             </button>
