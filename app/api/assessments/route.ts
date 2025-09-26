@@ -1,64 +1,70 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { mockAssessments } from "@/lib/mock-data"
-import type { Assessment } from "@/lib/types"
+import { type NextRequest, NextResponse } from "next/server";
+import { mockAssessments } from "@/lib/mock-data";
+import type { Assessment } from "@/lib/types";
+
+// Define valid assessment types
+const assessmentTypes = ["PHQ9", "GAD7"] as const;
+type AssessmentType = (typeof assessmentTypes)[number];
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get("userId")
-    const type = searchParams.get("type") as "PHQ9" | "GAD7" | null
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    const type = searchParams.get("type") as AssessmentType | null;
 
-    let filteredAssessments = mockAssessments
+    let filteredAssessments = mockAssessments;
 
     if (userId) {
-      filteredAssessments = filteredAssessments.filter((assessment) => assessment.userId === userId)
+      filteredAssessments = filteredAssessments.filter(
+        (assessment) => assessment.userId === userId
+      );
     }
 
-    if (type) {
-      filteredAssessments = filteredAssessments.filter((assessment) => assessment.type === type)
+    if (type && assessmentTypes.includes(type)) {
+      filteredAssessments = filteredAssessments.filter(
+        (assessment) => assessment.type === type
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: filteredAssessments,
-    })
+    return NextResponse.json({ success: true, data: filteredAssessments });
   } catch (error) {
+    console.error("GET assessments error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch assessments",
-      },
-      { status: 500 },
-    )
+      { success: false, error: "Failed to fetch assessments" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId, type, responses } = body
+    const body = await request.json();
+    const { userId, type, responses } = body;
 
-    // Calculate score based on responses
-    const totalScore = responses.reduce((sum: number, response: number) => sum + response, 0)
-
-    // Determine severity based on score and type
-    let severity: string
-    if (type === "PHQ9") {
-      if (totalScore <= 4) severity = "minimal"
-      else if (totalScore <= 9) severity = "mild"
-      else if (totalScore <= 14) severity = "moderate"
-      else if (totalScore <= 19) severity = "moderately-severe"
-      else severity = "severe"
-    } else {
-      // GAD7
-      if (totalScore <= 4) severity = "minimal"
-      else if (totalScore <= 9) severity = "mild"
-      else if (totalScore <= 14) severity = "moderate"
-      else severity = "severe"
+    // Validate type
+    if (!assessmentTypes.includes(type)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid assessment type" },
+        { status: 400 }
+      );
     }
 
-    // Generate recommendations based on severity
-    const recommendations = generateRecommendations(type, severity)
+    // Validate responses
+    if (!Array.isArray(responses) || !responses.every((r) => typeof r === "number")) {
+      return NextResponse.json(
+        { success: false, error: "Invalid responses format" },
+        { status: 400 }
+      );
+    }
+
+    // Calculate total score
+    const totalScore = responses.reduce((sum: number, response: number) => sum + response, 0);
+
+    // Determine severity
+    const severity = getSeverity(type, totalScore);
+
+    // Generate recommendations
+    const recommendations = generateRecommendations(type, severity);
 
     const newAssessment: Assessment = {
       id: Math.random().toString(36).substr(2, 9),
@@ -69,27 +75,45 @@ export async function POST(request: NextRequest) {
       severity: severity as Assessment["severity"],
       completedAt: new Date(),
       recommendations,
-    }
+    };
 
-    // In a real app, save to database
-    mockAssessments.push(newAssessment)
+    // Save to mock DB
+    mockAssessments.push(newAssessment);
 
-    return NextResponse.json({
-      success: true,
-      data: newAssessment,
-    })
+    return NextResponse.json({ success: true, data: newAssessment });
   } catch (error) {
+    console.error("POST assessments error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to save assessment",
-      },
-      { status: 500 },
-    )
+      { success: false, error: "Failed to save assessment" },
+      { status: 500 }
+    );
   }
 }
 
-function generateRecommendations(type: string, severity: string): string[] {
+// ---------- Helpers ----------
+
+function getSeverity(type: AssessmentType, totalScore: number): string {
+  const thresholds: Record<AssessmentType, [number, string][]> = {
+    PHQ9: [
+      [4, "minimal"],
+      [9, "mild"],
+      [14, "moderate"],
+      [19, "moderately-severe"],
+      [Infinity, "severe"],
+    ],
+    GAD7: [
+      [4, "minimal"],
+      [9, "mild"],
+      [14, "moderate"],
+      [Infinity, "severe"],
+    ],
+  };
+
+  const list = thresholds[type];
+  return list.find(([max]) => totalScore <= max)![1];
+}
+
+function generateRecommendations(type: AssessmentType, severity: string): string[] {
   const baseRecommendations = {
     PHQ9: {
       minimal: ["Maintain healthy lifestyle habits", "Continue regular exercise and sleep routine"],
@@ -138,11 +162,8 @@ function generateRecommendations(type: string, severity: string): string[] {
         "Build a strong support network",
       ],
     },
-  }
+  } as const;
 
-  return (
-    baseRecommendations[type as keyof typeof baseRecommendations]?.[
-      severity as keyof typeof baseRecommendations.PHQ9
-    ] || []
-  )
+  const recs = baseRecommendations[type]?.[severity as keyof typeof baseRecommendations.PHQ9];
+  return recs ?? [];
 }

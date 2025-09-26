@@ -87,8 +87,9 @@ export default function AssessmentsPage() {
 
         {/* Assessment Cards */}
         <div className="grid md:grid-cols-2 gap-6">
+
           {/* PHQ-9 Depression Assessment */}
-          <Card className="border-border bg-card">
+          <Card id="phq9-results" className="border-border bg-card">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -147,7 +148,7 @@ export default function AssessmentsPage() {
           </Card>
 
           {/* GAD-7 Anxiety Assessment */}
-          <Card className="border-border bg-card">
+          <Card id="gad7-results" className="border-border bg-card">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
