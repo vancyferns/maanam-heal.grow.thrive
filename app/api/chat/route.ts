@@ -9,7 +9,7 @@ if (!process.env.GEMINI_API_KEY) {
 }
 
 // Initialize Gemini client
-const genAI = new GoogleGenerativeAI("AIzaSyCJSrMMOxl12G-Kvc7fLfR3M1qepgAyk5k"/*process.env.GEMINI_API_KEY!*/);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function GET(request: NextRequest) {
   try {
